@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Blood Donation</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <header>
+        <h1>🩸 Smart Blood Donation System</h1>
+    </header>
+
+    <main>
+        <!-- Fingerprint Scanner -->
+        <section id="fingerprint-section">
+            <h2>🔍 Scan Fingerprint to Detect Blood Group</h2>
+            <button id="scanFingerprint">Scan Fingerprint</button>
+            <p id="bloodGroupResult">Your Blood Group: <span>Unknown</span></p>
+        </section>
+
+        <!-- Find Donors -->
+        <section id="find-donors">
+            <h2>🔎 Find Matching Donors</h2>
+            <input type="text" id="bloodGroupInput" placeholder="Enter Blood Group (A+, O-, etc)">
+            <button id="findDonors">Find Donors</button>
+            <ul id="donorList"></ul>
+        </section>
+
+        <!-- Blood Banks -->
+        <section id="blood-banks">
+            <h2>🏥 Find Nearby Blood Banks</h2>
+            <button id="findBloodBanks">Show on Map</button>
+            <div id="map"></div>
+        </section>
+
+        <!-- Family Donation -->
+        <section id="family-donation">
+            <h2>👨‍👩‍👧‍👦 Family Member Must Donate</h2>
+            <input type="text" id="familyMemberName" placeholder="Enter Family Member Name">
+            <button id="confirmDonation">Confirm Donation</button>
+            <p id="donationStatus"></p>
+        </section>
+    </main>
+
+    <script src="index.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
+
+</body>
+</html>

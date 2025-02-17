@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fingerprint Scanner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Fingerprint Scanner</h1>
+        <button id="scanFingerprint">Scan Fingerprint</button>
+        <p id="status"></p>
+        <h2>Your Blood Group: <span id="bloodGroup"></span></h2>
+    </div>
+
+    <script>
+        document.getElementById("scanFingerprint").addEventListener("click", async () => {
+            try {
+                const credential = await navigator.credentials.create({
+                    publicKey: {
+                        challenge: new Uint8Array(32),
+                        rp: { name: "Blood Connect" },
+                        user: { id: new Uint8Array(16), name: "User", displayName: "Blood Donor" },
+                        pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+                        authenticatorSelection: { authenticatorAttachment: "platform" },
+                        timeout: 60000,
+                    }
+                });
+
+                document.getElementById("status").innerText = "✅ Fingerprint Scanned!";
+                
+                let bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
+                let randomGroup = bloodGroups[Math.floor(Math.random() * bloodGroups.length)];
+                document.getElementById("bloodGroup").innerText = randomGroup;
+
+            } catch (error) {
+                document.getElementById("status").innerText = "❌ Fingerprint Scan Failed!";
+            }
+        });
+    </script>
+</body>
+</html>

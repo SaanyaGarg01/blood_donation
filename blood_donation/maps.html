@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Nearby Blood Banks</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Find Nearby Blood Banks & Donors</h1>
+    <button onclick="findBloodBanks()">Find Blood Banks</button>
+    <div id="map"></div>
+
+    <script>
+        let map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 28.7041, lng: 77.1025 }, // Default: New Delhi
+                zoom: 12,
+            });
+
+            // Get user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    map.setCenter(userLocation);
+                    new google.maps.Marker({
+                        position: userLocation,
+                        map,
+                        title: "Your Location",
+                        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                    });
+                });
+            }
+        }
+
+        function findBloodBanks() {
+            const service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(
+                {
+                    location: map.getCenter(),
+                    radius: 5000, // 5km range
+                    type: ["hospital"], // Blood banks are often in hospitals
+                    keyword: "blood bank"
+                },
+                (results, status) => {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        results.forEach((place) => {
+                            new google.maps.Marker({
+                                position: place.geometry.location,
+                                map,
+                                title: place.name,
+                            });
+                        });
+                    } else {
+                        alert("No blood banks found nearby!");
+                    }
+                }
+            );
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>

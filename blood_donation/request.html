@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Blood</title>
+</head>
+<body>
+    <h2>🆘 Request Blood</h2>
+    <form id="requestForm">
+        <input type="text" id="requestBloodGroup" placeholder="Enter Required Blood Group" required>
+        <button type="submit">Find & Notify Donors</button>
+    </form>
+    
+    <h3>👥 Matching Donors</h3>
+    <ul id="matchingDonors"></ul>
+
+    <script>
+        document.getElementById("requestForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            let requiredGroup = document.getElementById("requestBloodGroup").value.toUpperCase();
+            let donors = JSON.parse(localStorage.getItem("donors")) || [];
+            let matchingDonors = donors.filter(d => d.bloodGroup === requiredGroup);
+        
+            let donorList = document.getElementById("matchingDonors");
+            donorList.innerHTML = "";
+        
+            if (matchingDonors.length > 0) {
+                matchingDonors.forEach(async (donor) => {
+                    let li = document.createElement("li");
+                    li.innerHTML = `✅ ${donor.name} - 📞 ${donor.contact}`;
+                    donorList.appendChild(li);
+        
+                    // Send SMS to donor
+                    await fetch("/send_sms", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ phone: donor.contact })
+                    });
+                });
+                alert("📲 SMS alerts sent to matching donors!");
+            } else {
+                donorList.innerHTML = "<li>❌ No matching donors found</li>";
+            }
+        });
+        
+    </script>
+</body>
+</html>
